@@ -1,0 +1,14 @@
+{
+  "features": [
+    "age",
+    "gender_code",
+    "height_cm",
+    "weight_kg",
+    "activity_level_code"
+  ],
+  "training_date": "2025-12-12T19:23:17.695967",
+  "metrics": {
+    "r2": 0.6948249832937241,
+    "rmse": 21.72124963745359
+  }
+}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Welcome, {{ user.name }}!</h2>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title text-muted">BMI</h5>
+                <h2 class="display-4 text-primary">{{ bmi }}</h2>
+                <p class="card-text">Body Mass Index</p>
+                <button class="btn btn-sm btn-link stretched-link" onclick="showExplanation('BMI', '{{ bmi_explanation }}')">See Calculation</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title text-muted">BMR</h5>
+                <h2 class="display-4 text-success">{{ bmr }}</h2>
+                <p class="card-text">Kcal / Day (Rest)</p>
+                <button class="btn btn-sm btn-link stretched-link" onclick="showExplanation('BMR', '{{ bmr_explanation }}')">See Calculation</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title text-muted">TDEE</h5>
+                <h2 class="display-4 text-warning">{{ tdee }}</h2>
+                <p class="card-text">Maintenance Calories</p>
+                <button class="btn btn-sm btn-link stretched-link" onclick="showExplanation('TDEE', '{{ tdee_explanation }}')">See Calculation</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h5 class="card-title text-muted">ML Predicted Burn</h5>
+                <h2 class="display-4 text-info">{{ predicted_calories }}</h2>
+                <p class="card-text">Kcal / Hour (Exercise)</p>
+                <button class="btn btn-sm btn-link stretched-link" onclick="showExplanation('ML Burn', '{{ predicted_explanation }}')">See Calculation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                Quick Actions
+            </div>
+            <div class="card-body d-grid gap-2">
+                <a href="/diet-plan" class="btn btn-outline-primary btn-lg"><i class="fas fa-utensils me-2"></i>View
+                    Diet Plan</a>
+                <a href="/workout-plan" class="btn btn-outline-success btn-lg"><i class="fas fa-running me-2"></i>View
+                    Workout Plan</a>
+                <a href="/progress" class="btn btn-outline-warning btn-lg"><i class="fas fa-chart-line me-2"></i>Track
+                    Progress</a>
+                <a href="/chat" class="btn btn-outline-info btn-lg"><i class="fas fa-robot me-2"></i>Chat with Coach</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                Weight History
+            </div>
+            <div class="card-body">
+                <canvas id="weightChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!-- Modal for Explanations -->
+<div class="modal fade" id="explanationModal" tabindex="-1" aria-labelledby="explanationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="explanationModalLabel">Metric Explanation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="explanationText">...</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function showExplanation(title, text) {
+        document.getElementById('explanationModalLabel').innerText = title + ' Calculation';
+        document.getElementById('explanationText').innerText = text;
+        var myModal = new bootstrap.Modal(document.getElementById('explanationModal'));
+        myModal.show();
+    }
+</script>
+
+{% block scripts %}
+<script src="/static/js/charts.js"></script>
+{% endblock %}

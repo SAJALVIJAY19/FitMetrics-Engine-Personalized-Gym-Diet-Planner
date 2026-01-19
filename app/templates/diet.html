@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Your Personalized Diet Plan</h2>
+        <p class="text-muted">Based on your TDEE of {{ plan.targets.total }} kcal</p>
+    </div>
+</div>
+
+<div class="row">
+    {% for meal_type, meal in plan.meals.items() %}
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <div class="card-header text-capitalize">
+                {{ meal_type }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title" id="meal-name-{{ meal_type }}">{{ meal.name }}</h5>
+                <p class="card-text display-6 text-primary"><span id="meal-cal-{{ meal_type }}">{{ meal.cal }}</span>
+                    kcal</p>
+                <p class="text-muted">Target: {{ plan.targets[meal_type] }} kcal</p>
+                {% if meal.note %}
+                <div class="alert alert-info p-2" style="font-size: 0.8rem;">
+                    {{ meal.note }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-sm btn-outline-secondary w-100" onclick="swapMeal('{{ meal_type }}')">Swap
+                    Meal</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5><i class="fas fa-info-circle me-2"></i>Nutrition Tips</h5>
+                <ul>
+                    <li>Drink at least 3 liters of water daily.</li>
+                    <li>Eat slowly and chew your food well.</li>
+                    <li>Include protein in every meal to maintain muscle mass.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function swapMeal(mealType) {
+        try {
+            const response = await fetch(`/diet/swap/${mealType}`);
+            const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            // Update the card content with animation effect
+            const nameEl = document.getElementById(`meal-name-${mealType}`);
+            const calEl = document.getElementById(`meal-cal-${mealType}`);
+
+            nameEl.style.opacity = 0;
+            calEl.style.opacity = 0;
+
+            setTimeout(() => {
+                nameEl.innerText = data.name;
+                calEl.innerText = data.cal;
+                nameEl.style.opacity = 1;
+                calEl.style.opacity = 1;
+            }, 200);
+
+        } catch (error) {
+            console.error('Error swapping meal:', error);
+            alert('Failed to swap meal. Please try again.');
+        }
+    }
+</script>
+{% endblock %}

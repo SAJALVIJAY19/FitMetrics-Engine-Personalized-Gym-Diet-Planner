@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Track Your Progress</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                Add Entry
+            </div>
+            <div class="card-body">
+                <form action="/progress" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Current Weight (kg)</label>
+                        <input type="number" step="0.1" name="weight" class="form-control" required
+                            value="{{ user.weight_kg }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mood</label>
+                        <select name="mood" class="form-control">
+                            <option value="Great">Great</option>
+                            <option value="Good">Good</option>
+                            <option value="Tired">Tired</option>
+                            <option value="Stressed">Stressed</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea name="notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Entry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                Weight Trend
+            </div>
+            <div class="card-body">
+                <canvas id="weightChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                History
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Weight</th>
+                            <th>Mood</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in entries %}
+                        <tr>
+                            <td>{{ entry.date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ entry.weight }} kg</td>
+                            <td>{{ entry.mood }}</td>
+                            <td>{{ entry.notes }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/charts.js"></script>
+{% endblock %}

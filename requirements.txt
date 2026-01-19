@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+jinja2
+python-multipart
+scikit-learn
+pandas
+joblib
+requests
+apscheduler
+passlib[bcrypt]
+httpx
+pytest
+itsdangerous

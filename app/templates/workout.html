@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Your AI Workout Plan</h2>
+        <p class="text-muted">Optimized for your BMI and predicted calorie burn.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center h-100 border-primary">
+            <div class="card-body">
+                <h5 class="card-title text-muted">Intensity</h5>
+                <h3 class="text-primary">{{ plan.intensity }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100 border-success">
+            <div class="card-body">
+                <h5 class="card-title text-muted">Duration</h5>
+                <h3 class="text-success">{{ plan.duration_minutes }} Minutes</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100 border-warning">
+            <div class="card-body">
+                <h5 class="card-title text-muted">Est. Calories</h5>
+                <h3 class="text-warning">{{ plan.calories_target }} kcal</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                Routine: {{ plan.level }} Level
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for exercise in plan.exercises %}
+                <li class="list-group-item bg-dark text-light border-secondary">
+                    <i class="fas fa-check-circle text-success me-2"></i> {{ exercise }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5><i class="fas fa-robot me-2"></i>AI Insight</h5>
+                <p>Based on your profile, our ML model predicts you burn approximately <strong>{{
+                        plan.ml_prediction_hourly }} kcal/hour</strong> during exercise. This plan is adjusted to
+                    maximize your efficiency.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
