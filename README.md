@@ -24,6 +24,12 @@ A full-stack metabolic intelligence system and fitness planner using FastAPI, SQ
 - Python 3.9+
 - Docker (optional)
 
+## Screenshots 
+<img width="1090" height="600" alt="Screenshot 2026-05-12 175212" src="https://github.com/user-attachments/assets/8f7a80f3-ed4a-432d-81bc-3701efd80d1a" />
+<img width="1083" height="591" alt="Screenshot 2026-05-12 175200" src="https://github.com/user-attachments/assets/5f4ad2c7-4da3-46d7-ab2c-cfe568024322" />
+<img width="1034" height="649" alt="Screenshot 2026-05-12 175141" src="https://github.com/user-attachments/assets/ec9150fe-f92e-4450-a494-ac89da8beb67" />
+<img width="1156" height="606" alt="Screenshot 2026-05-12 175131" src="https://github.com/user-attachments/assets/2229c494-03c1-44e3-b8fa-c6036c59a0f1" />
+
 ### Local Setup
 1. Create a virtual environment:
    ```bash
