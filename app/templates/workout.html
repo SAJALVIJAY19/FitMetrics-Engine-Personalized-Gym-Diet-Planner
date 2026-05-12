@@ -1,63 +1,99 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-12">
-        <h2>Your AI Workout Plan</h2>
-        <p class="text-muted">Optimized for your BMI and predicted calorie burn.</p>
+<!-- Header Section -->
+<div class="row mb-5">
+    <div class="col-md-12 text-center">
+        <h1 class="display-4 fw-bold text-gradient mb-3"><i class="fas fa-dumbbell me-3"></i>Your Fitmetric Workout Plan</h1>
+        <p class="lead text-muted">Optimized specifically for your profile to maximize calorie burn and efficiency.</p>
     </div>
 </div>
 
-<div class="row mb-4">
+<!-- Stats Row -->
+<div class="row mb-5 g-4">
+    <!-- Intensity -->
     <div class="col-md-4">
-        <div class="card text-center h-100 border-primary">
-            <div class="card-body">
-                <h5 class="card-title text-muted">Intensity</h5>
-                <h3 class="text-primary">{{ plan.intensity }}</h3>
+        <div class="glass-card text-center h-100 p-4" style="border-top: 4px solid var(--primary-color);">
+            <div class="card-body p-0">
+                <div class="stat-card-icon mb-3">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <h5 class="text-muted mb-2 text-uppercase" style="letter-spacing: 1px;">Intensity</h5>
+                <h2 class="text-white fw-bold mb-0" style="text-shadow: 0 0 5px var(--primary-color);">{{ plan.intensity }}</h2>
             </div>
         </div>
     </div>
+    
+    <!-- Duration -->
     <div class="col-md-4">
-        <div class="card text-center h-100 border-success">
-            <div class="card-body">
-                <h5 class="card-title text-muted">Duration</h5>
-                <h3 class="text-success">{{ plan.duration_minutes }} Minutes</h3>
+        <div class="glass-card text-center h-100 p-4" style="border-top: 4px solid var(--success);">
+            <div class="card-body p-0">
+                <div class="stat-card-icon mb-3" style="background: linear-gradient(45deg, var(--success), #a8ff78); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+                <h5 class="text-muted mb-2 text-uppercase" style="letter-spacing: 1px;">Duration</h5>
+                <h2 class="text-white fw-bold mb-0" style="text-shadow: 0 0 5px var(--success);">{{ plan.duration_minutes }} <span class="fs-5 text-muted">Min</span></h2>
             </div>
         </div>
     </div>
+    
+    <!-- Calories -->
     <div class="col-md-4">
-        <div class="card text-center h-100 border-warning">
-            <div class="card-body">
-                <h5 class="card-title text-muted">Est. Calories</h5>
-                <h3 class="text-warning">{{ plan.calories_target }} kcal</h3>
+        <div class="glass-card text-center h-100 p-4" style="border-top: 4px solid var(--warning);">
+            <div class="card-body p-0">
+                <div class="stat-card-icon mb-3" style="background: linear-gradient(45deg, var(--warning), #ff9900); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    <i class="fas fa-burn"></i>
+                </div>
+                <h5 class="text-muted mb-2 text-uppercase" style="letter-spacing: 1px;">Target Burn</h5>
+                <h2 class="text-white fw-bold mb-0" style="text-shadow: 0 0 5px var(--warning);">{{ plan.calories_target }} <span class="fs-5 text-muted">kcal</span></h2>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<!-- Routine & Insights -->
+<div class="row g-4 mb-5">
+    <!-- Routine List -->
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                Routine: {{ plan.level }} Level
+        <div class="glass-card h-100 p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <h4 class="mb-0 text-white"><i class="fas fa-list-ul me-2 text-primary"></i>Routine Breakdown</h4>
+                <span class="badge bg-primary bg-opacity-25 text-primary border border-primary px-3 py-2 rounded-pill">
+                    {{ plan.level }} Level
+                </span>
             </div>
-            <ul class="list-group list-group-flush">
+            
+            <div class="d-flex flex-column gap-3">
                 {% for exercise in plan.exercises %}
-                <li class="list-group-item bg-dark text-light border-secondary">
-                    <i class="fas fa-check-circle text-success me-2"></i> {{ exercise }}
-                </li>
+                <div class="d-flex align-items-center p-3 rounded" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); transition: all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.08)'; this.style.transform='translateX(5px)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.transform='translateX(0)'">
+                    <div class="bg-success bg-opacity-25 text-success rounded-circle d-flex justify-content-center align-items-center me-4" style="width: 40px; height: 40px;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h5 class="mb-0 text-light fw-normal">{{ exercise }}</h5>
+                </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
+    
+    <!-- AI Insight -->
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
-                <h5><i class="fas fa-robot me-2"></i>AI Insight</h5>
-                <p>Based on your profile, our ML model predicts you burn approximately <strong>{{
-                        plan.ml_prediction_hourly }} kcal/hour</strong> during exercise. This plan is adjusted to
-                    maximize your efficiency.</p>
+        <div class="glass-card h-100 p-4" style="background: linear-gradient(145deg, rgba(30,30,30,0.4), rgba(112,0,255,0.15)); border: 1px solid rgba(112,0,255,0.3);">
+            <div class="mb-4 text-center mt-3">
+                <div class="d-inline-flex p-4 rounded-circle mb-3 align-items-center justify-content-center" style="background: rgba(112,0,255,0.2); width: 80px; height: 80px; box-shadow: 0 0 10px rgba(112,0,255,0.2);">
+                    <i class="fas fa-brain fa-3x" style="color: #b980ff;"></i>
+                </div>
+                <h4 class="text-white fw-bold">AI Insight</h4>
             </div>
+            <div class="p-3 rounded" style="background: rgba(0,0,0,0.3); border-left: 4px solid var(--secondary-color);">
+                <p class="text-light mb-0" style="line-height: 1.7;">
+                    Based on your physiological profile, our ML engine predicts an exercise burn rate of 
+                    <strong class="text-primary fs-5">{{ plan.ml_prediction_hourly }} kcal/hr</strong>.
+                </p>
+            </div>
+            <p class="text-muted small mt-4 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+                <i class="fas fa-info-circle me-1"></i> This routine is dynamically generated to keep your heart rate in the optimal zone for maximum metabolic efficiency.
+            </p>
         </div>
     </div>
 </div>

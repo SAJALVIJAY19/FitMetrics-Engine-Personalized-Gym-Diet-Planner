@@ -1,74 +1,90 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-12">
-        <h2>Track Your Progress</h2>
+<!-- Header Section -->
+<div class="row mb-5">
+    <div class="col-md-12 text-center">
+        <h1 class="display-4 fw-bold text-gradient mb-3"><i class="fas fa-chart-line me-3"></i>Track Your Progress</h1>
+        <p class="lead text-muted">Log your daily weight and mood to monitor your transformation.</p>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-4 mb-5">
     <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                Add Entry
+        <div class="glass-card h-100 p-4">
+            <div class="d-flex align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <i class="fas fa-plus-circle fa-2x me-3 text-primary"></i>
+                <h4 class="mb-0 text-white">Add Entry</h4>
             </div>
-            <div class="card-body">
-                <form action="/progress" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Current Weight (kg)</label>
-                        <input type="number" step="0.1" name="weight" class="form-control" required
-                            value="{{ user.weight_kg }}">
+            
+            <form action="/progress" method="post">
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase" style="letter-spacing: 1px;">Current Weight (kg)</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0" style="border-color: rgba(255,255,255,0.1); color: var(--primary-color);"><i class="fas fa-weight"></i></span>
+                        <input type="number" step="0.1" name="weight" class="form-control border-start-0 ps-0" required value="{{ user.weight_kg }}" style="box-shadow: none;">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mood</label>
-                        <select name="mood" class="form-control">
-                            <option value="Great">Great</option>
-                            <option value="Good">Good</option>
-                            <option value="Tired">Tired</option>
-                            <option value="Stressed">Stressed</option>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase" style="letter-spacing: 1px;">Mood</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0" style="border-color: rgba(255,255,255,0.1); color: var(--warning);"><i class="fas fa-smile"></i></span>
+                        <select name="mood" class="form-select border-start-0 ps-0" style="box-shadow: none; background-image: none;">
+                            <option value="Great" class="bg-dark">Great</option>
+                            <option value="Good" class="bg-dark">Good</option>
+                            <option value="Tired" class="bg-dark">Tired</option>
+                            <option value="Stressed" class="bg-dark">Stressed</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Notes</label>
-                        <textarea name="notes" class="form-control" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Save Entry</button>
-                </form>
-            </div>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase" style="letter-spacing: 1px;">Notes</label>
+                    <textarea name="notes" class="form-control" rows="3" placeholder="How was your workout today?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill fw-bold" style="font-size: 1.1rem;"><i class="fas fa-save me-2"></i>Save Entry</button>
+            </form>
         </div>
     </div>
+    
     <div class="col-md-8">
-        <div class="card mb-4">
-            <div class="card-header">
-                Weight Trend
+        <div class="glass-card mb-4 p-4">
+            <div class="d-flex align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <i class="fas fa-chart-area fa-2x me-3 text-info"></i>
+                <h4 class="mb-0 text-white">Weight Trend</h4>
             </div>
-            <div class="card-body">
-                <canvas id="weightChart"></canvas>
+            <div class="p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);">
+                <canvas id="weightChart" style="max-height: 300px;"></canvas>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                History
+        <div class="glass-card p-4">
+            <div class="d-flex align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <i class="fas fa-history fa-2x me-3 text-success"></i>
+                <h4 class="mb-0 text-white">History Logs</h4>
             </div>
-            <div class="table-responsive">
-                <table class="table table-dark table-striped mb-0">
-                    <thead>
+            <div class="table-responsive rounded" style="border: 1px solid rgba(255,255,255,0.05);">
+                <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                    <thead style="background: rgba(255,255,255,0.05);">
                         <tr>
-                            <th>Date</th>
-                            <th>Weight</th>
-                            <th>Mood</th>
-                            <th>Notes</th>
+                            <th class="border-0 py-3 px-4 text-muted font-weight-normal">Date</th>
+                            <th class="border-0 py-3 px-4 text-muted font-weight-normal">Weight</th>
+                            <th class="border-0 py-3 px-4 text-muted font-weight-normal">Mood</th>
+                            <th class="border-0 py-3 px-4 text-muted font-weight-normal">Notes</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style="border-top: none;">
                         {% for entry in entries %}
-                        <tr>
-                            <td>{{ entry.date.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ entry.weight }} kg</td>
-                            <td>{{ entry.mood }}</td>
-                            <td>{{ entry.notes }}</td>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td class="border-0 py-3 px-4">{{ entry.date.strftime('%Y-%m-%d') }}</td>
+                            <td class="border-0 py-3 px-4 text-primary fw-bold">{{ entry.weight }} kg</td>
+                            <td class="border-0 py-3 px-4">
+                                {% if entry.mood == 'Great' %}<span class="badge bg-success bg-opacity-25 text-success">Great</span>
+                                {% elif entry.mood == 'Good' %}<span class="badge bg-info bg-opacity-25 text-info">Good</span>
+                                {% elif entry.mood == 'Tired' %}<span class="badge bg-warning bg-opacity-25 text-warning">Tired</span>
+                                {% else %}<span class="badge bg-danger bg-opacity-25 text-danger">{{ entry.mood }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="border-0 py-3 px-4 text-muted">{{ entry.notes }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

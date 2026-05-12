@@ -1,34 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-12">
-        <h2>Your Personalized Diet Plan</h2>
-        <p class="text-muted">Based on your TDEE of {{ plan.targets.total }} kcal</p>
+<!-- Header Section -->
+<div class="row mb-5">
+    <div class="col-md-12 text-center">
+        <h1 class="display-4 fw-bold text-gradient mb-3"><i class="fas fa-utensils me-3"></i>Your Personalized Diet Plan</h1>
+        <p class="lead text-muted">Tailored to meet your daily Target Daily Energy Expenditure (TDEE) of <strong class="text-primary">{{ plan.targets.total }} kcal</strong></p>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-4 mb-5">
+    {% set colors = {'breakfast': 'var(--success)', 'lunch': 'var(--warning)', 'dinner': 'var(--primary-color)', 'snacks': 'var(--secondary-color)'} %}
+    {% set icons = {'breakfast': 'fa-coffee', 'lunch': 'fa-hamburger', 'dinner': 'fa-drumstick-bite', 'snacks': 'fa-apple-alt'} %}
+    
     {% for meal_type, meal in plan.meals.items() %}
-    <div class="col-md-3 mb-4">
-        <div class="card h-100">
-            <div class="card-header text-capitalize">
-                {{ meal_type }}
+    {% set border_color = colors.get(meal_type, 'var(--primary-color)') %}
+    {% set icon = icons.get(meal_type, 'fa-utensils') %}
+    
+    <div class="col-md-3">
+        <div class="glass-card h-100 p-0" style="border-top: 4px solid {{ border_color }}; overflow: hidden;">
+            <div class="card-header text-capitalize border-bottom-0 pt-4 pb-0 px-4" style="background: transparent;">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 40px; height: 40px; background: rgba(255,255,255,0.05); color: {{ border_color }};">
+                        <i class="fas {{ icon }}"></i>
+                    </div>
+                    <h4 class="mb-0 text-white">{{ meal_type }}</h4>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 class="card-title" id="meal-name-{{ meal_type }}">{{ meal.name }}</h5>
-                <p class="card-text display-6 text-primary"><span id="meal-cal-{{ meal_type }}">{{ meal.cal }}</span>
-                    kcal</p>
-                <p class="text-muted">Target: {{ plan.targets[meal_type] }} kcal</p>
+            <div class="card-body px-4">
+                <h5 class="card-title text-light mb-3 fw-normal" id="meal-name-{{ meal_type }}" style="transition: opacity 0.2s ease; min-height: 48px;">{{ meal.name }}</h5>
+                
+                <div class="mb-4">
+                    <p class="card-text display-5 fw-bold mb-0" style="color: {{ border_color }}; text-shadow: 0 0 5px {{ border_color }}40;"><span id="meal-cal-{{ meal_type }}" style="transition: opacity 0.2s ease;">{{ meal.cal }}</span> <span class="fs-6 text-muted fw-normal">kcal</span></p>
+                    <p class="text-muted small">Target: {{ plan.targets[meal_type] }} kcal</p>
+                </div>
+
                 {% if meal.note %}
-                <div class="alert alert-info p-2" style="font-size: 0.8rem;">
-                    {{ meal.note }}
+                <div class="p-3 rounded mb-3" style="background: rgba(0,242,255,0.05); border-left: 3px solid var(--primary-color); font-size: 0.85rem; color: var(--text-muted);">
+                    <i class="fas fa-lightbulb text-primary me-2"></i> {{ meal.note }}
                 </div>
                 {% endif %}
             </div>
-            <div class="card-footer">
-                <button class="btn btn-sm btn-outline-secondary w-100" onclick="swapMeal('{{ meal_type }}')">Swap
-                    Meal</button>
+            <div class="card-footer border-top-0 pb-4 px-4 bg-transparent">
+                <button class="btn btn-outline-light w-100 rounded-pill" onclick="swapMeal('{{ meal_type }}')" style="border-color: rgba(255,255,255,0.2); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                    <i class="fas fa-sync-alt me-2"></i>Swap Meal
+                </button>
             </div>
         </div>
     </div>
@@ -37,14 +53,41 @@
 
 <div class="row mt-4">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h5><i class="fas fa-info-circle me-2"></i>Nutrition Tips</h5>
-                <ul>
-                    <li>Drink at least 3 liters of water daily.</li>
-                    <li>Eat slowly and chew your food well.</li>
-                    <li>Include protein in every meal to maintain muscle mass.</li>
-                </ul>
+        <div class="glass-card p-4" style="background: linear-gradient(145deg, rgba(30,30,30,0.8), rgba(0,242,255,0.05)); border: 1px solid rgba(0,242,255,0.2);">
+            <div class="d-flex align-items-center mb-4 pb-3" style="border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <div class="rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 50px; height: 50px; background: rgba(0,242,255,0.1);">
+                    <i class="fas fa-info-circle fa-lg text-primary"></i>
+                </div>
+                <h4 class="mb-0 text-white">Nutrition Insights & Tips</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start p-3 rounded" style="background: rgba(0,0,0,0.3);">
+                        <i class="fas fa-tint text-info mt-1 me-3"></i>
+                        <div>
+                            <h6 class="text-white mb-1">Hydration</h6>
+                            <p class="text-muted small mb-0">Drink at least 3 liters of water daily for optimal metabolic function.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start p-3 rounded" style="background: rgba(0,0,0,0.3);">
+                        <i class="fas fa-utensils text-warning mt-1 me-3"></i>
+                        <div>
+                            <h6 class="text-white mb-1">Mindful Eating</h6>
+                            <p class="text-muted small mb-0">Eat slowly and chew your food well to improve digestion and satiety.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start p-3 rounded" style="background: rgba(0,0,0,0.3);">
+                        <i class="fas fa-dumbbell text-success mt-1 me-3"></i>
+                        <div>
+                            <h6 class="text-white mb-1">Protein Intake</h6>
+                            <p class="text-muted small mb-0">Include protein in every meal to support muscle recovery and growth.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

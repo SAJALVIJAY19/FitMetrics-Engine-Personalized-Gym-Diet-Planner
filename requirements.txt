@@ -12,3 +12,5 @@ passlib[bcrypt]
 httpx
 pytest
 itsdangerous
+google-genai
+python-dotenv

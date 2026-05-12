@@ -1,5 +1,13 @@
 import requests
 import random
+import os
+import json
+from google import genai
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 def lookup_food_calories(food_name):
     """
@@ -25,13 +33,64 @@ def lookup_food_calories(food_name):
 def generate_diet_plan(tdee):
     """
     Generates a simple diet plan based on TDEE.
+    Uses Gemini API if API key is provided, otherwise falls back to a template list.
     """
     # Calorie distribution
-    breakfast_cal = tdee * 0.25
-    lunch_cal = tdee * 0.35
-    dinner_cal = tdee * 0.30
-    snack_cal = tdee * 0.10
+    breakfast_cal = int(tdee * 0.25)
+    lunch_cal = int(tdee * 0.35)
+    dinner_cal = int(tdee * 0.30)
+    snack_cal = int(tdee * 0.10)
     
+    plan = {
+        "targets": {
+            "total": tdee,
+            "breakfast": breakfast_cal,
+            "lunch": lunch_cal,
+            "dinner": dinner_cal,
+            "snacks": snack_cal
+        },
+        "meals": {}
+    }
+
+    if GEMINI_API_KEY:
+        try:
+            client = genai.Client(api_key=GEMINI_API_KEY)
+            prompt = f"""
+Generate a healthy daily diet plan for a person with a Total Daily Energy Expenditure (TDEE) of {tdee} calories.
+The calories should be roughly distributed as:
+- Breakfast: ~{breakfast_cal} calories
+- Lunch: ~{lunch_cal} calories
+- Dinner: ~{dinner_cal} calories
+- Snacks: ~{snack_cal} calories
+
+Respond ONLY with a valid JSON format perfectly matching this exact structure, with no markdown tags or other text.
+{{
+    "breakfast": {{"name": "Food name here", "cal": {breakfast_cal}}},
+    "lunch": {{"name": "Food name here", "cal": {lunch_cal}}},
+    "dinner": {{"name": "Food name here", "cal": {dinner_cal}}},
+    "snacks": {{"name": "Food name here", "cal": {snack_cal}}}
+}}
+"""
+            response = client.models.generate_content(model='gemini-1.5-flash', contents=prompt)
+            response_text = response.text.strip()
+            # Clean up potential markdown from the response
+            if response_text.startswith("```json"):
+                response_text = response_text[7:]
+            if response_text.startswith("```"):
+                response_text = response_text[3:]
+            if response_text.endswith("```"):
+                response_text = response_text[:-3]
+            
+            meals = json.loads(response_text.strip())
+            
+            # Basic validation
+            if all(k in meals for k in ["breakfast", "lunch", "dinner", "snacks"]):
+                plan["meals"] = meals
+                return plan
+        except Exception as e:
+            print(f"Error calling Gemini API: {e}")
+            print("Falling back to standard generation.")
+
     # Placeholder food database (fallback)
     foods = {
         "breakfast": [
@@ -56,26 +115,10 @@ def generate_diet_plan(tdee):
         ]
     }
     
-    plan = {
-        "targets": {
-            "total": tdee,
-            "breakfast": int(breakfast_cal),
-            "lunch": int(lunch_cal),
-            "dinner": int(dinner_cal),
-            "snacks": int(snack_cal)
-        },
-        "meals": {
-            "breakfast": random.choice(foods["breakfast"]),
-            "lunch": random.choice(foods["lunch"]),
-            "dinner": random.choice(foods["dinner"]),
-            "snacks": random.choice(foods["snacks"])
-        }
-    }
-    
-    # Try to enhance with OpenFoodFacts for one item (demo purpose)
-    # real_cal = lookup_food_calories("apple")
-    # if real_cal:
-    #     plan["meals"]["snacks"]["note"] = f"OpenFoodFacts says Apple is ~{real_cal} kcal/100g"
+    plan["meals"]["breakfast"] = random.choice(foods["breakfast"])
+    plan["meals"]["lunch"] = random.choice(foods["lunch"])
+    plan["meals"]["dinner"] = random.choice(foods["dinner"])
+    plan["meals"]["snacks"] = random.choice(foods["snacks"])
         
     return plan
 
@@ -83,7 +126,6 @@ def get_random_meal(meal_type):
     """
     Returns a random meal for the specified type (breakfast, lunch, dinner, snacks).
     """
-    # Placeholder food database (duplicated for scope, ideally should be a constant or class)
     foods = {
         "breakfast": [
             {"name": "Oatmeal with Berries", "cal": 350},

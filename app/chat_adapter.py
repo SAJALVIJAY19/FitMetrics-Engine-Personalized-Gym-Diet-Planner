@@ -13,11 +13,7 @@ class ChatAdapter:
             return self._fallback_rules(message)
 
     def _call_llm(self, message):
-        # Placeholder for OpenAI/LLM call
-        # import openai
-        # openai.api_key = self.api_key
-        # response = openai.ChatCompletion.create(...)
-        # return response.choices[0].message.content
+
         return f"[LLM Mock] I received your message: '{message}'. (LLM integration pending key)"
 
     def _fallback_rules(self, message):
